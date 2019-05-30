@@ -19,6 +19,7 @@ import { Toastr, ToastrManager } from 'ng6-toastr-notifications';
   styleUrls: ['./task.component.css']
 })
 export class TaskComponent implements OnInit {
+  projectId = localStorage.getItem('projectId');
   toDo = [];
   inProgress = [];
   completed = [];
@@ -31,6 +32,7 @@ export class TaskComponent implements OnInit {
   doughnutChartType: string;
   doughnutChartOptions: {};
   doughnutChartLegent: boolean;
+  sprints = [];
 
   constructor(
     private spinner: NgxSpinnerService,
@@ -41,6 +43,7 @@ export class TaskComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.getActiveSprints();
     this.spinner.show();
     setTimeout(() => {
       this.getSprintStories();
@@ -181,14 +184,34 @@ export class TaskComponent implements OnInit {
         () => {
           this.sprintService.completeSprint(toCompleteId).subscribe(
             () => {
-              this.toastrService.infoToastr('This is info toast.', 'Info');
+              const index = this.sprints.indexOf(toCompleteId);
+              this.sprints.splice(index, 1);
+              this.toDo = this.toDo.filter(x => x.sprintId !== toCompleteId);
+              this.inProgress = this.inProgress.filter(
+                x => x.sprintId !== toCompleteId
+              );
+              this.completed = this.completed.filter(
+                x => x.sprintId !== toCompleteId
+              );
+              this.alertify.success('Sprint Completed');
             },
             error => {
-              this.toastrService.errorToastr(error.message);
+              this.alertify.error(error.message);
             }
           );
         }
       );
     }
+  }
+
+  getActiveSprints() {
+    this.sprintService.getSprints(this.projectId).subscribe(
+      next => {
+        this.sprints = next.filter(x => x.statusId === 2);
+      },
+      error => {
+        this.alertify.error(error.message);
+      }
+    );
   }
 }

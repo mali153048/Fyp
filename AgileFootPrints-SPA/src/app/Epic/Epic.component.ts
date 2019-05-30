@@ -31,6 +31,8 @@ import { ClockServiceService } from '../_services/ClockService.service';
   styleUrls: ['../sidebar/sidebar.component.scss', './Epic.component.css']
 })
 export class EpicComponent implements OnInit {
+  remaininhTime = [];
+
   sprintStatus: string;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -63,6 +65,8 @@ export class EpicComponent implements OnInit {
     'actions'
   ];
   dataSource: MatTableDataSource<any>;
+  endSprintIds = [];
+
   constructor(
     private spinner: NgxSpinnerService,
     private epicService: EpicService,
@@ -328,6 +332,7 @@ export class EpicComponent implements OnInit {
         next.forEach(element => {
           element.startDate = new Date(element.startDate);
           element.endDate = new Date(element.endDate);
+
           if (
             element.startDate.getTime() ===
               new Date('0001-01-01T00:00:00').getTime() ||
@@ -347,12 +352,21 @@ export class EpicComponent implements OnInit {
             // send element.id
             this.startSprintIds.push(element.id);
           }
+          if (new Date(element.endDate).getTime() < new Date().getTime()) {
+            this.endSprintIds.push(element.id);
+          }
+
           console.log('yo', this.startSprintIds);
         });
         if (this.startSprintIds.length > 0) {
           // console.log(this.startSprintIds);
           this.sprintService.startNow(this.startSprintIds).subscribe();
         }
+        if (this.endSprintIds.length > 0) {
+          this.sprintService.endSprint(this.endSprintIds).subscribe();
+        }
+
+        console.log('End IDS', this.endSprintIds);
         this.proejctSprints = next;
         console.log(this.proejctSprints);
       },

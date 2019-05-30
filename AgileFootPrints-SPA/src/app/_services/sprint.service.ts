@@ -48,10 +48,14 @@ export class SprintService {
     console.log('SP ids', sprintIds);
     return this.http.post<any>(this.baseUrl + 'startSprint', sprintIds);
   }
+  endSprint(endSprintIds: any) {
+    return this.http.post<any>(this.baseUrl + 'endSprint', endSprintIds);
+  }
 
   completeSprint(sprintId: number): Observable<any> {
-    return this.http.get(
-      this.baseUrl + 'completeSprint/' + sprintId.toString()
+    return this.http.post(
+      this.baseUrl + 'completeSprint/' + sprintId.toString(),
+      null
     );
   }
 }
