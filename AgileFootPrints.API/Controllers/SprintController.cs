@@ -29,7 +29,7 @@ namespace AgileFootPrints.API.Controllers
         public async Task<IActionResult> GetSprints(string projectId)
         {
             int pId = Convert.ToInt32(projectId);
-            var sprints = await _context.Sprints.Include(x => x.Stories).Where(x => x.projectId == pId).ToListAsync();
+            var sprints = await _context.Sprints.Include(x => x.Stories).Where(x => x.projectId == pId).ToArrayAsync();
             return Ok(sprints);
         }
 

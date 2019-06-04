@@ -43,5 +43,32 @@ namespace AgileFootPrints.API.Controllers
             var Meetings = _context.Meetings.Where(x => x.ProjectId == Convert.ToInt32(projectId)).ToArray();
             return Ok(Meetings);
         }
+
+        [HttpDelete("delete/{meetingId}")]
+        public async Task<IActionResult> Delete(string meetingId)
+        {
+            var meetig = _context.Meetings.Find(Convert.ToInt32(meetingId));
+            if (meetig == null)
+                return NotFound();
+            _context.Meetings.Remove(meetig);
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+        [HttpPatch("edit/{meetingId}")]
+        public async Task<IActionResult> Edit(string meetingId, Meeting Meeting)
+        {
+            var meeting = await _context.Meetings.FindAsync(Convert.ToInt32(meetingId));
+            if (meeting == null)
+                return NotFound();
+            meeting.Subject = Meeting.Subject;
+            meeting.Description = Meeting.Description;
+            meeting.Date = TimeZone.CurrentTimeZone.ToLocalTime(Meeting.Date); ;
+            meeting.StartTime = Meeting.StartTime;
+            meeting.EndTime = Meeting.EndTime;
+            meeting.Venue = Meeting.Venue;
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
     }
 }

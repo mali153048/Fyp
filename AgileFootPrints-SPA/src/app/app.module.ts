@@ -27,6 +27,7 @@ import { ToastrModule } from 'ng6-toastr-notifications';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+
 import {
   MatTableModule,
   MatPaginatorModule,
@@ -78,6 +79,9 @@ import { UserScrumRoleComponent } from './UserScrumRole/UserScrumRole.component'
 import { RoleBasedProjectViewComponent } from './RoleBasedProjectView/RoleBasedProjectView.component';
 import { MeetingComponent } from './Meeting/Meeting.component';
 import { NewMeetingComponent } from './NewMeeting/NewMeeting.component';
+import { EditMeetingComponent } from './EditMeeting/EditMeeting.component';
+import { ReportComponent } from './Report/Report.component';
+import { from } from 'rxjs';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -112,7 +116,9 @@ export function tokenGetter() {
     UserScrumRoleComponent,
     RoleBasedProjectViewComponent,
     MeetingComponent,
-    NewMeetingComponent
+    NewMeetingComponent,
+    EditMeetingComponent,
+    ReportComponent
   ],
   imports: [
     BrowserModule,
@@ -160,6 +166,7 @@ export function tokenGetter() {
     NgScrollbarModule,
     MatTabsModule,
     NgxMaterialTimepickerModule,
+
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
@@ -191,7 +198,8 @@ export function tokenGetter() {
     ProjectContributorBottomSheetComponent,
     MailComponent,
     RoleBasedProjectViewComponent,
-    NewMeetingComponent
+    NewMeetingComponent,
+    EditMeetingComponent
   ]
 })
 export class AppModule {}

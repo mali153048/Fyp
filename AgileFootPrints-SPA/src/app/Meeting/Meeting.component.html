@@ -13,7 +13,6 @@
           <div class="col-md-2">Date</div>
           <div class="col-md-2">Starts At</div>
           <div class="col-md-2">Ends At</div>
-          <div class="col-md-2">Venue</div>
         </mat-list-item>
         <mat-list-item
           *ngFor="let meeting of meetings"
@@ -27,8 +26,27 @@
             {{ meeting.date | date: 'shortDate' }}
           </div>
           <div class="col-md-2 text-light">{{ meeting.startTime }}</div>
-          <div class="col-md-2 text-light">{{ meeting.endTime }}</div>
-          <div class="col-md-2 text-light">{{ meeting.venue }}</div>
+          <div class="col-md-2 text-light">
+            {{ meeting.endTime }}
+            <button
+              mat-icon-button
+              [matMenuTriggerFor]="menu"
+              aria-label="Example icon-button with a menu"
+            >
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button (click)="delete(meeting.id)" mat-menu-item>
+                <mat-icon>delete</mat-icon>
+                <span>Delete</span>
+              </button>
+
+              <button (click)="edit(meeting.id)" mat-menu-item>
+                <mat-icon>update</mat-icon>
+                <span>Edit</span>
+              </button>
+            </mat-menu>
+          </div>
         </mat-list-item>
       </div>
     </mat-list>

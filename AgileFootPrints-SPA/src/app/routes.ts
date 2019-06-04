@@ -10,6 +10,7 @@ import { ProjectContributorsComponent } from './ProjectContributors/ProjectContr
 import { MyTaskComponent } from './my-task/my-task.component';
 import { UserScrumRoleComponent } from './UserScrumRole/UserScrumRole.component';
 import { MeetingComponent } from './Meeting/Meeting.component';
+import { ReportComponent } from './Report/Report.component';
 
 export const appRoutes: Routes = [
   {
@@ -50,6 +51,11 @@ export const appRoutes: Routes = [
   {
     path: 'meeting',
     component: MeetingComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'report',
+    component: ReportComponent,
     canActivate: [AuthGuard]
   },
   {

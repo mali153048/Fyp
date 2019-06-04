@@ -17,4 +17,14 @@ export class MeetingService {
   getProjectMeetings(projectId: string): Observable<any> {
     return this.http.get<any>(this.baseUrl + 'getProjectMeetings/' + projectId);
   }
+
+  delete(meetingId: string): Observable<any> {
+    return this.http.delete(this.baseUrl + 'delete/' + meetingId);
+  }
+  editMeeting(meetingModel: any, meetingId: string) {
+    return this.http.patch<any>(
+      this.baseUrl + 'edit/' + meetingId,
+      meetingModel
+    );
+  }
 }
