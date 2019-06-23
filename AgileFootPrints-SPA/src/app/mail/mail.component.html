@@ -8,19 +8,12 @@
   </div>
   <hr />
   <mat-form-field>
-    <input
-      [(ngModel)]="subject"
-      (keyup)="check()"
-      matInput
-      placeholder="Subject"
-      required
-    />
+    <input [(ngModel)]="subject" matInput placeholder="Subject" required />
     <mat-error>Subject Name is required</mat-error>
   </mat-form-field>
   <br />
   <mat-form-field>
     <textarea
-      (keyup)="check()"
       [(ngModel)]="message"
       matInput
       placeholder="Message"

@@ -35,8 +35,7 @@ namespace AgileFootPrints.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"),
-             y => y.SuppressForeignKeyEnforcement()));
+            services.AddDbContext<DataContext>(x => x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             IdentityBuilder builder = services.AddIdentityCore<User>(opt =>
             {
@@ -70,10 +69,12 @@ namespace AgileFootPrints.API
                 .Build();                     //every authorized request.
                 options.Filters.Add(new AuthorizeFilter(Policy));
             })
+
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
             .AddJsonOptions(options => options.SerializerSettings
             .ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddTransient<SeedRoles>();
+            services.BuildServiceProvider().GetService<DataContext>().Database.Migrate();
             services.AddCors();
             services.AddAutoMapper();
 
@@ -95,7 +96,15 @@ namespace AgileFootPrints.API
             //seeder.Seed();  //use when new roles are to be added
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
-            app.UseMvc();
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            app.UseMvc(routes =>
+            {
+                routes.MapSpaFallbackRoute(
+                    name: "spa-fallback",
+                    defaults: new { controller = "FallBack", action = "Index" }
+                );
+            });
         }
     }
 }
