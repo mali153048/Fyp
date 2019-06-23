@@ -83,7 +83,7 @@ namespace AgileFootPrints.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, SeedRoles seeder)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsProduction())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -93,7 +93,7 @@ namespace AgileFootPrints.API
             }
 
             //app.UseHttpsRedirection();
-            //seeder.Seed();  //use when new roles are to be added
+            seeder.Seed();  //use when new roles are to be added
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
             app.UseDefaultFiles();

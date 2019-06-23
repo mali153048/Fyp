@@ -1,3 +1,4 @@
+using System.Linq;
 using AgileFootPrints.API.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -8,14 +9,14 @@ namespace AgileFootPrints.API.Data
 {
     public class DataContext : IdentityDbContext<User, Role, int,
      IdentityUserClaim<int>, UserRole, IdentityUserLogin<int>,
-      IdentityRoleClaim<int>, IdentityUserToken<int>>, IDesignTimeDbContextFactory<DataContext>
+      IdentityRoleClaim<int>, IdentityUserToken<int>>/* , IDesignTimeDbContextFactory<DataContext> */
     {
 
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
-        public DataContext()
+        /* public DataContext()
         {
 
-        }
+        } */
         public DbSet<Project> Projects { get; set; }
         public DbSet<Epic> Epics { get; set; }
         public DbSet<Story> Stories { get; set; }
@@ -34,6 +35,10 @@ namespace AgileFootPrints.API.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.SetNull;
+            }
             base.OnModelCreating(builder);
 
             builder.Entity<UserRole>(userRole =>
@@ -75,30 +80,24 @@ namespace AgileFootPrints.API.Data
                 .WithOne(y => y.User);
             builder.Entity<User>()
                 .HasMany(x => x.Meetings)
-                .WithOne(c => c.User)
-                .OnDelete(DeleteBehavior.SetNull);
+                .WithOne(c => c.User);
+
+
             builder.Entity<Project>()
                 .HasMany(x => x.Meetings)
-                .WithOne(c => c.Project)
-                .OnDelete(DeleteBehavior.SetNull);
-            /* builder.Entity<UserProjectRole>()
-                .HasIndex(roles => new { roles.UserId, roles.ProjectId })
-               .IsUnique(true); */
-            /* builder.Entity<User>()
-                .HasMany(x => x.UserProjectRole)
-                .WithOne(c => c.User).OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<Project>()
-                .HasMany(x => x.UserProjectRole)
-                .WithOne(c => c.Project).OnDelete(DeleteBehavior.Cascade);
- */
+                .WithOne(c => c.Project);
+
+
+
+
         }
-        public DataContext CreateDbContext(string[] args)
+        /* public DataContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
             optionsBuilder.UseSqlite("Data Source=AgileFootPrints.db");
 
 
             return new DataContext(optionsBuilder.Options);
-        }
+        } */
     }
 }
